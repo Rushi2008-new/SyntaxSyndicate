@@ -1,12 +1,45 @@
-# Syntax Syndicate
+ # Syntax Syndicate
 
-## Google Sheets setup
+An interactive multi-level debugging challenge where participants diagnose bugs, submit corrected code, and justify each solution.
 
-1. Create or open the Google Sheet where submissions should be stored.
-2. Copy the Sheet ID from its URL. It is the text between `/d/` and `/edit`.
-3. Open **Extensions > Apps Script**, paste the contents of [Code.gs](Code.gs), and replace `PASTE_YOUR_GOOGLE_SHEET_ID_HERE`.
-4. Set `SHEET_NAME` to the exact name of the destination tab, usually `Sheet1`.
-5. Deploy it as a **Web app** with **Execute as: Me** and **Who has access: Anyone**.
-6. Use the deployment URL in `GOOGLE_APPS_SCRIPT_URL` near the top of the HTML file.
+## What It Includes
 
-The HTML page sends one row per final submission. Previous difficulty-level answers are included as separate columns in that row. After changing Apps Script code, deploy a **new version** of the web app.
+- C and Java debugging scenarios
+- Four progressive levels: Beginner, Intermediate, Hard, and Extreme
+- Three randomly selected tasks per language and level
+- A 15-minute timer for every level
+- Required responses for the bug, corrected code, and justification
+- Anti-refresh and tab-switch detection for controlled submissions
+- Google Sheets submission through a Google Apps Script web app
+- A dedicated submission-complete confirmation page
+
+
+
+## Submission Configuration
+
+The form posts responses to the Google Apps Script URL stored in `Syntax Syndicate.html` in the `GOOGLE_APPS_SCRIPT_URL` constant.
+
+To connect the project to a different Google Apps Script deployment:
+
+1. Deploy the Apps Script as a web app.
+2. Copy its `/exec` URL.
+3. Replace the value of `GOOGLE_APPS_SCRIPT_URL`.
+4. Confirm that the script accepts `POST` requests and writes the received fields to the intended Google Sheet.
+
+The form submits through a hidden iframe and then redirects to `Submission Completed.html`, so participants see a clear completion message without leaving the challenge workflow.
+
+## Important Behavior
+
+- Refreshing the challenge page blocks the current submission.
+- Switching tabs, minimizing the browser, or hiding the page triggers the anti-cheat submission flow.
+- The timer starts when a language is selected and resets when a new level begins.
+- Responses from completed levels are preserved as hidden form fields until the final submission.
+
+## Browser Support
+
+Use a current version of Chrome, Edge, Firefox, or Safari with JavaScript enabled.
+
+## Project Goal
+
+Syntax Syndicate is designed to test practical debugging ability, code correction, and technical reasoning in a structured competition format.
+
