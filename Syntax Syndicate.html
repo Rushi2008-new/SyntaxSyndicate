@@ -492,8 +492,23 @@
         function startSubmission() {
             currentLevelIndex = 0;
             languageValue.value = languageSelect.value;
-            languageSelect.disabled = true;
             setLevel(levels[currentLevelIndex]);
+        }
+
+        function changeLanguage() {
+            languageValue.value = languageSelect.value;
+
+            if (currentLevelIndex === -1) {
+                startSubmission();
+                return;
+            }
+
+            taskBlocks.forEach((block) => {
+                block.querySelectorAll("textarea").forEach((field) => {
+                    field.value = "";
+                });
+            });
+            assignTasks();
         }
 
         function advanceLevel() {
@@ -526,7 +541,7 @@
             tabBlocker.classList.add("is-visible");
         }
 
-        languageSelect.addEventListener("change", startSubmission);
+        languageSelect.addEventListener("change", changeLanguage);
         clearTasks();
         blockRefreshedPage();
 
