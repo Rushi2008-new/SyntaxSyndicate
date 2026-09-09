@@ -566,8 +566,9 @@
             submissionForm.action = GOOGLE_APPS_SCRIPT_URL;
             submissionForm.target = "submission-frame";
             submissionForm.submit();
-            alert("Submission sent to Google Sheets.");
-            submissionForm.reset();
+            setTimeout(() => {
+                window.location.href = "Submission Completed.html";
+            }, 250);
         });
 
         document.getElementById("next-stage").addEventListener("click", () => {
