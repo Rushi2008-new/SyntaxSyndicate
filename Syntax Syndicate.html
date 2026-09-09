@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +74,7 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.5rem;
         }
-        
+
         .dynamic-prompt {
             color: #ff7b72;
             font-size: 1.05rem;
@@ -93,7 +94,9 @@
             font-weight: 600;
         }
 
-        input[type="text"], select, textarea {
+        input[type="text"],
+        select,
+        textarea {
             width: 100%;
             padding: 0.75rem;
             background-color: var(--bg-color);
@@ -104,7 +107,9 @@
             font-family: inherit;
         }
 
-        input[type="text"]:focus, select:focus, textarea:focus {
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--primary-green);
             box-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
@@ -179,128 +184,81 @@
         }
     </style>
 </head>
-<body>
 
+<body>
     <div class="tab-blocker" id="tab-blocker" role="alert" aria-live="assertive">
         <div>
             <h2>Submission Blocked</h2>
             <p>A new tab or window was detected. Reopen the website to start a new submission.</p>
         </div>
     </div>
-
     <div class="container">
         <div class="header">
             <h1>Syntax Syndicate</h1>
             <p>DEBUG. JUSTIFY. CONQUER. | FINAL SUBMISSION</p>
         </div>
-
-        <form id="submission-form" action="https://formsubmit.co/rushimaheshwari184@gmail.com" method="POST">
-            
-            <input type="hidden" name="_subject" value="New Syndicate Final Submission!">
-            <input type="hidden" name="_captcha" value="false">
-
+        <form id="submission-form" action="https://formsubmit.co/rushimaheshwari184@gmail.com" method="POST"> <input
+                type="hidden" name="_subject" value="New Syndicate Final Submission!"> <input type="hidden"
+                name="_captcha" value="false">
             <div class="two-col">
-                <div class="form-group">
-                    <label for="name">Participant Name</label>
-                    <input type="text" id="name" name="Participant_Name" required placeholder="John Doe">
-                </div>
-                <div class="form-group">
-                    <label for="rollno">Roll Number / Contact</label>
-                    <input type="text" id="rollno" name="Roll_Number" required placeholder="e.g. 21CS012">
-                </div>
+                <div class="form-group"> <label for="name">Participant Name</label> <input type="text" id="name"
+                        name="Participant_Name" required placeholder="John Doe"> </div>
+                <div class="form-group"> <label for="rollno">Roll Number / Contact</label> <input type="text"
+                        id="rollno" name="Roll_Number" required placeholder="e.g. 21CS012"> </div>
             </div>
-
             <div class="two-col">
-                <div class="form-group">
-                    <label for="gauntlet">Gauntlet Level</label>
-                    <select id="gauntlet" required disabled>
+                <div class="form-group"> <label for="gauntlet">Gauntlet Level</label> <select id="gauntlet" required
+                        disabled>
                         <option value="" disabled selected>Select Level...</option>
                         <option value="Beginner">Beginner</option>
                         <option value="Intermediate">Intermediate</option>
                         <option value="Hard">Hard</option>
                         <option value="Extreme">Extreme</option>
-                    </select>
-                    <input type="hidden" id="gauntlet-value" name="Gauntlet_Level" value="">
-                </div>
-                <div class="form-group">
-                    <label for="language">Language</label>
-                    <select id="language" name="Language" required>
+                    </select> <input type="hidden" id="gauntlet-value" name="Gauntlet_Level" value=""> </div>
+                <div class="form-group"> <label for="language">Language</label> <select id="language" name="Language"
+                        required>
                         <option value="" disabled selected>Select Language...</option>
                         <option value="C">C</option>
                         <option value="Java">Java</option>
-                    </select>
-                    <input type="hidden" id="language-value" name="Language" value="">
-                </div>
+                    </select> <input type="hidden" id="language-value" name="Language" value=""> </div>
             </div>
-
             <div class="question-block">
-                <h2 class="question-header">Task 1</h2>
-                <input type="hidden" name="Task_1_Prompt" id="hidden-task1" value="">
+                <h2 class="question-header">Task 1</h2> <input type="hidden" name="Task_1_Prompt" id="hidden-task1"
+                    value="">
                 <div class="dynamic-prompt" id="task1-display">Loading challenge...</div>
-                
-                <div class="form-group">
-                    <label>What is the Bug/Error?</label>
-                    <textarea name="Q1_Bug" rows="2" required placeholder="Describe the error..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Corrected Code</label>
-                    <textarea name="Q1_Code" class="code-input" required placeholder="Paste fixed code here..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Justification</label>
-                    <textarea name="Q1_Justification" rows="2" required placeholder="Why did this fix work?"></textarea>
-                </div>
+                <div class="form-group"> <label>What is the Bug/Error?</label> <textarea name="Q1_Bug" rows="2" required
+                        placeholder="Describe the error..."></textarea> </div>
+                <div class="form-group"> <label>Corrected Code</label> <textarea name="Q1_Code" class="code-input"
+                        required placeholder="Paste fixed code here..."></textarea> </div>
+                <div class="form-group"> <label>Justification</label> <textarea name="Q1_Justification" rows="2"
+                        required placeholder="Why did this fix work?"></textarea> </div>
             </div>
-
             <div class="question-block">
-                <h2 class="question-header">Task 2</h2>
-                <input type="hidden" name="Task_2_Prompt" id="hidden-task2" value="">
+                <h2 class="question-header">Task 2</h2> <input type="hidden" name="Task_2_Prompt" id="hidden-task2"
+                    value="">
                 <div class="dynamic-prompt" id="task2-display">Loading challenge...</div>
-                
-                <div class="form-group">
-                    <label>What is the Bug/Error?</label>
-                    <textarea name="Q2_Bug" rows="2" required placeholder="Describe the error..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Corrected Code</label>
-                    <textarea name="Q2_Code" class="code-input" required placeholder="Paste fixed code here..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Justification</label>
-                    <textarea name="Q2_Justification" rows="2" required placeholder="Why did this fix work?"></textarea>
-                </div>
+                <div class="form-group"> <label>What is the Bug/Error?</label> <textarea name="Q2_Bug" rows="2" required
+                        placeholder="Describe the error..."></textarea> </div>
+                <div class="form-group"> <label>Corrected Code</label> <textarea name="Q2_Code" class="code-input"
+                        required placeholder="Paste fixed code here..."></textarea> </div>
+                <div class="form-group"> <label>Justification</label> <textarea name="Q2_Justification" rows="2"
+                        required placeholder="Why did this fix work?"></textarea> </div>
             </div>
-
             <div class="question-block">
-                <h2 class="question-header">Task 3</h2>
-                <input type="hidden" name="Task_3_Prompt" id="hidden-task3" value="">
+                <h2 class="question-header">Task 3</h2> <input type="hidden" name="Task_3_Prompt" id="hidden-task3"
+                    value="">
                 <div class="dynamic-prompt" id="task3-display">Loading challenge...</div>
-                
-                <div class="form-group">
-                    <label>What is the Bug/Error?</label>
-                    <textarea name="Q3_Bug" rows="2" required placeholder="Describe the error..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Corrected Code</label>
-                    <textarea name="Q3_Code" class="code-input" required placeholder="Paste fixed code here..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Justification</label>
-                    <textarea name="Q3_Justification" rows="2" required placeholder="Why did this fix work?"></textarea>
-                </div>
-            </div>
-            
-            <button type="submit">Final Submit All Tasks</button>
+                <div class="form-group"> <label>What is the Bug/Error?</label> <textarea name="Q3_Bug" rows="2" required
+                        placeholder="Describe the error..."></textarea> </div>
+                <div class="form-group"> <label>Corrected Code</label> <textarea name="Q3_Code" class="code-input"
+                        required placeholder="Paste fixed code here..."></textarea> </div>
+                <div class="form-group"> <label>Justification</label> <textarea name="Q3_Justification" rows="2"
+                        required placeholder="Why did this fix work?"></textarea> </div>
+            </div> <button type="button" id="next-stage">Next Stage</button> <button type="submit" id="submit-button"
+                hidden>Final Submit All Levels</button>
             <p class="notice">Do not click submit until you have completed all tasks for your gauntlet level.</p>
         </form>
     </div>
-
     <script>
         const questionBanks = {
             C: {
@@ -357,6 +315,7 @@
         const tabBlocker = document.getElementById("tab-blocker");
         const levels = ["Beginner", "Intermediate", "Hard", "Extreme"];
         const taskBlocks = [...document.querySelectorAll(".question-block")];
+
         let currentLevelIndex = -1;
         let pageWasHidden = false;
         let submissionBlocked = false;
@@ -369,6 +328,37 @@
             submissionForm.appendChild(field);
         }
 
+        function clearTasks() {
+            for (let taskNumber = 1; taskNumber <= 3; taskNumber += 1) {
+                const taskDisplay = document.getElementById(`task${taskNumber}-display`);
+                const taskHidden = document.getElementById(`hidden-task${taskNumber}`);
+
+                taskDisplay.textContent = "Select a language and difficulty level to load a challenge.";
+                taskHidden.value = "";
+            }
+        }
+
+        function assignTasks() {
+            const selectedPool = questionBanks[languageSelect.value]?.[difficultySelect.value];
+
+            if (!selectedPool) {
+                clearTasks();
+                return;
+            }
+
+            const shuffledTasks = [...selectedPool].sort(() => Math.random() - 0.5);
+            const selectedTasks = shuffledTasks.slice(0, 3);
+
+            for (let index = 0; index < selectedTasks.length; index += 1) {
+                const taskNumber = index + 1;
+                const display = document.getElementById(`task${taskNumber}-display`);
+                const hiddenInput = document.getElementById(`hidden-task${taskNumber}`);
+
+                display.textContent = selectedTasks[index];
+                hiddenInput.value = selectedTasks[index];
+            }
+        }
+
         function setLevel(level) {
             difficultySelect.value = level;
             difficultyValue.value = level;
@@ -376,6 +366,7 @@
             taskBlocks.forEach((block, index) => {
                 const taskNumber = index + 1;
                 const answerFields = block.querySelectorAll("textarea");
+
                 answerFields[0].name = `${level}_Q${taskNumber}_Bug`;
                 answerFields[1].name = `${level}_Q${taskNumber}_Code`;
                 answerFields[2].name = `${level}_Q${taskNumber}_Justification`;
@@ -386,8 +377,10 @@
         }
 
         function currentAnswersAreComplete() {
-            return taskBlocks.every((block) => [...block.querySelectorAll("textarea")]
-                .every((field) => field.value.trim() !== ""));
+            return taskBlocks.every((block) => {
+                const answerFields = [...block.querySelectorAll("textarea")];
+                return answerFields.every((field) => field.value.trim() !== "");
+            });
         }
 
         function preserveCurrentLevel() {
@@ -396,10 +389,12 @@
             taskBlocks.forEach((block, index) => {
                 const taskNumber = index + 1;
                 const answerFields = block.querySelectorAll("textarea");
+
                 appendHiddenField(`${level}_Q${taskNumber}_Bug`, answerFields[0].value);
                 appendHiddenField(`${level}_Q${taskNumber}_Code`, answerFields[1].value);
                 appendHiddenField(`${level}_Q${taskNumber}_Justification`, answerFields[2].value);
                 appendHiddenField(`Task_${level}_${taskNumber}_Prompt`, document.getElementById(`hidden-task${taskNumber}`).value);
+
                 answerFields.forEach((field) => {
                     field.value = "";
                 });
@@ -425,35 +420,7 @@
             setLevel(levels[currentLevelIndex]);
         }
 
-        function assignTasks() {
-            const selectedPool = questionBanks[languageSelect.value]?.[difficultySelect.value];
-
-            if (!selectedPool) {
-                clearTasks();
-                return;
-            }
-
-            const shuffledTasks = [...selectedPool].sort(() => Math.random() - 0.5);
-            const selectedTasks = shuffledTasks.slice(0, 3);
-
-            for (let index = 0; index < selectedTasks.length; index += 1) {
-                const taskNumber = index + 1;
-                document.getElementById(`task${taskNumber}-display`).textContent = selectedTasks[index];
-                document.getElementById(`hidden-task${taskNumber}`).value = selectedTasks[index];
-            }
-        }
-
-        function clearTasks() {
-            for (let taskNumber = 1; taskNumber <= 3; taskNumber += 1) {
-                document.getElementById(`task${taskNumber}-display`).textContent = "Select a language and difficulty level to load a challenge.";
-                document.getElementById(`hidden-task${taskNumber}`).value = "";
-            }
-        }
-
-        languageSelect.addEventListener("change", () => {
-            startSubmission();
-        });
-
+        languageSelect.addEventListener("change", startSubmission);
         clearTasks();
 
         submissionForm.addEventListener("input", () => {
@@ -479,11 +446,28 @@
         submissionForm.addEventListener("submit", (event) => {
             if (submissionBlocked || currentLevelIndex !== levels.length - 1 || !currentAnswersAreComplete()) {
                 event.preventDefault();
-                alert(submissionBlocked
-                    ? "Submission blocked. Reopen the website before submitting again."
-                    : "Complete every task in every difficulty level before submitting.");
+                alert(
+                    submissionBlocked
+                        ? "Submission blocked. Reopen the website before submitting again."
+                        : "Complete every task in every difficulty level before submitting."
+                );
+            }
+        });
+
+        document.getElementById("next-stage").addEventListener("click", () => {
+            if (!currentAnswersAreComplete()) {
+                alert("Complete every task in this level before moving to the next stage.");
+                return;
+            }
+
+            advanceLevel();
+
+            if (currentLevelIndex === levels.length - 1) {
+                document.getElementById("next-stage").hidden = true;
+                document.getElementById("submit-button").hidden = false;
             }
         });
     </script>
 </body>
+
 </html>
