@@ -182,10 +182,32 @@
             max-width: 32rem;
             line-height: 1.5;
         }
+
+        .level-timer {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+            padding: 0.75rem 1rem;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--primary-green);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.25rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .level-timer.is-expired {
+            color: #ff7b72;
+        }
     </style>
 </head>
 
 <body>
+    <div class="level-timer" id="level-timer" aria-live="polite">15:00</div>
     <div class="tab-blocker" id="tab-blocker" role="alert" aria-live="assertive">
         <div>
             <h2>Submission Blocked</h2>
@@ -314,12 +336,54 @@
         const difficultySelect = document.getElementById("gauntlet");
         const difficultyValue = document.getElementById("gauntlet-value");
         const tabBlocker = document.getElementById("tab-blocker");
+        const timerDisplay = document.getElementById("level-timer");
         const levels = ["Beginner", "Intermediate", "Hard", "Extreme"];
         const taskBlocks = [...document.querySelectorAll(".question-block")];
+        const levelTimeLimit = 15 * 60;
 
         let currentLevelIndex = -1;
         let pageWasHidden = false;
         let submissionBlocked = false;
+        let levelTimedOut = false;
+        let timerInterval = null;
+        let timerEndTime = 0;
+
+        function updateTimerDisplay(secondsRemaining) {
+            const minutes = Math.floor(secondsRemaining / 60).toString().padStart(2, "0");
+            const seconds = (secondsRemaining % 60).toString().padStart(2, "0");
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function expireCurrentLevel() {
+            clearInterval(timerInterval);
+            levelTimedOut = true;
+            timerDisplay.classList.add("is-expired");
+            taskBlocks.forEach((block) => {
+                block.querySelectorAll("textarea").forEach((field) => {
+                    field.disabled = true;
+                });
+            });
+            document.getElementById("next-stage").disabled = true;
+            document.getElementById("submit-button").disabled = true;
+            document.querySelector(".notice").textContent = "Time expired for this level. Reopen the website to start a new submission.";
+            alert("Time expired for this level. Reopen the website to start a new submission.");
+        }
+
+        function resetLevelTimer() {
+            clearInterval(timerInterval);
+            levelTimedOut = false;
+            timerDisplay.classList.remove("is-expired");
+            updateTimerDisplay(levelTimeLimit);
+            timerEndTime = Date.now() + levelTimeLimit * 1000;
+            timerInterval = setInterval(() => {
+                const secondsRemaining = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+                updateTimerDisplay(secondsRemaining);
+
+                if (secondsRemaining === 0) {
+                    expireCurrentLevel();
+                }
+            }, 250);
+        }
 
         function appendHiddenField(name, value) {
             const field = document.createElement("input");
@@ -327,6 +391,26 @@
             field.name = name;
             field.value = value;
             submissionForm.appendChild(field);
+        }
+
+        function disableFormControls() {
+            submissionForm.querySelectorAll("input, select, textarea, button").forEach((field) => {
+                field.disabled = true;
+            });
+        }
+
+        function blockRefreshedPage() {
+            const navigationEntry = performance.getEntriesByType("navigation")[0];
+            const wasRefreshed = navigationEntry?.type === "reload" || performance.navigation?.type === 1;
+
+            if (!wasRefreshed) {
+                return;
+            }
+
+            submissionBlocked = true;
+            disableFormControls();
+            tabBlocker.querySelector("p").textContent = "This submission was blocked because the page was refreshed. Reopen the website to start again.";
+            tabBlocker.classList.add("is-visible");
         }
 
         function clearTasks() {
@@ -363,6 +447,8 @@
         function setLevel(level) {
             difficultySelect.value = level;
             difficultyValue.value = level;
+            document.getElementById("next-stage").disabled = false;
+            document.getElementById("submit-button").disabled = false;
 
             taskBlocks.forEach((block, index) => {
                 const taskNumber = index + 1;
@@ -375,6 +461,7 @@
             });
 
             assignTasks();
+            resetLevelTimer();
         }
 
         function currentAnswersAreComplete() {
@@ -421,29 +508,46 @@
             setLevel(levels[currentLevelIndex]);
         }
 
+        function submitCheatingAttempt(reason) {
+            if (submissionBlocked) {
+                return;
+            }
+
+            submissionBlocked = true;
+            clearInterval(timerInterval);
+            appendHiddenField("Anti_Cheat_Status", "Cheat detected");
+            appendHiddenField("Anti_Cheat_Event", reason);
+            appendHiddenField("Anti_Cheat_Time", new Date().toISOString());
+            submissionForm.action = GOOGLE_APPS_SCRIPT_URL;
+            submissionForm.target = "submission-frame";
+            submissionForm.submit();
+            disableFormControls();
+            tabBlocker.querySelector("p").textContent = "Your submission was sent because a new tab or window was detected.";
+            tabBlocker.classList.add("is-visible");
+        }
+
         languageSelect.addEventListener("change", startSubmission);
         clearTasks();
+        blockRefreshedPage();
 
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
                 pageWasHidden = true;
+                submitCheatingAttempt("Page hidden: tab changed, window minimized, or browser left");
                 return;
             }
 
             if (pageWasHidden) {
-                submissionBlocked = true;
-                submissionForm.reset();
                 tabBlocker.classList.add("is-visible");
-                alert("A new tab or window was detected. This submission has been stopped. Reopen the website to start again.");
             }
         });
 
         submissionForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            if (submissionBlocked || currentLevelIndex !== levels.length - 1 || !currentAnswersAreComplete()) {
+            if (submissionBlocked || levelTimedOut || currentLevelIndex !== levels.length - 1 || !currentAnswersAreComplete()) {
                 alert(
-                    submissionBlocked
+                    submissionBlocked || levelTimedOut
                         ? "Submission blocked. Reopen the website before submitting again."
                         : "Complete every task in every difficulty level before submitting."
                 );
