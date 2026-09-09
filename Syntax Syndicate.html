@@ -15,23 +15,31 @@
             --section-bg: #21262d;
         }
 
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 2rem;
+            padding: clamp(0.75rem, 3vw, 2rem);
             display: flex;
             justify-content: center;
+            min-width: 0;
         }
 
         .container {
             background-color: var(--container-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 2.5rem;
+            padding: clamp(1rem, 4vw, 2.5rem);
             width: 100%;
             max-width: 900px;
+            min-width: 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
@@ -45,9 +53,10 @@
         .header h1 {
             color: var(--primary-green);
             margin: 0 0 0.5rem 0;
-            font-size: 2.5rem;
+            font-size: clamp(1.6rem, 6vw, 2.5rem);
             letter-spacing: 2px;
             text-transform: uppercase;
+            overflow-wrap: anywhere;
         }
 
         .header p {
@@ -61,7 +70,7 @@
             background-color: var(--section-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 1.5rem;
+            padding: clamp(1rem, 3vw, 1.5rem);
             margin-bottom: 2rem;
             border-left: 4px solid var(--primary-green);
         }
@@ -81,6 +90,7 @@
             margin-bottom: 1.5rem;
             line-height: 1.5;
             font-weight: 500;
+            overflow-wrap: anywhere;
         }
 
         .form-group {
@@ -119,6 +129,7 @@
             font-family: 'Courier New', Courier, monospace;
             min-height: 150px;
             white-space: pre;
+            overflow-x: auto;
         }
 
         .two-col {
@@ -128,6 +139,7 @@
 
         .two-col .form-group {
             flex: 1;
+            min-width: 0;
         }
 
         button {
@@ -202,6 +214,69 @@
 
         .level-timer.is-expired {
             color: #ff7b72;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .container {
+                border-radius: 6px;
+                padding: 1rem;
+            }
+
+            .header {
+                margin-bottom: 1.25rem;
+                padding: 3.25rem 0 1rem;
+            }
+
+            .header h1 {
+                letter-spacing: 1px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .two-col {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .question-block {
+                margin-bottom: 1rem;
+                border-left-width: 3px;
+            }
+
+            .question-header {
+                font-size: 1.2rem;
+            }
+
+            .level-timer {
+                top: 0.75rem;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 0.5rem 0.75rem;
+                font-size: 1rem;
+                white-space: nowrap;
+            }
+
+            button {
+                padding: 0.9rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
