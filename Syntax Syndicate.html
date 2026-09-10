@@ -7,12 +7,18 @@
     <title>Syntax Syndicate | Multi-Level Submission</title>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --container-bg: #161b22;
-            --primary-green: #4ade80;
-            --text-main: #c9d1d9;
-            --border-color: #30363d;
-            --section-bg: #21262d;
+            --bg-color: #08111f;
+            --container-bg: #101c2d;
+            --primary-green: #72f1c4;
+            --primary-green-dark: #2bbf99;
+            --text-main: #d7e2ee;
+            --muted-text: #8ea4b8;
+            --border-color: #294056;
+            --section-bg: #132438;
+            --field-bg: #0b1727;
+            --coral: #ff886f;
+            --gold: #f3c969;
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
         }
 
         *,
@@ -22,119 +28,244 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at 15% 0%, #173451 0, transparent 34rem),
+                radial-gradient(circle at 92% 12%, #203b3e 0, transparent 28rem), var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: clamp(0.75rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 3.5rem) clamp(0.75rem, 4vw, 2.5rem);
             display: flex;
             justify-content: center;
             min-width: 0;
+            min-height: 100vh;
         }
 
         .container {
-            background-color: var(--container-bg);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, rgba(20, 42, 65, 0.98), rgba(12, 27, 44, 0.98));
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: clamp(1rem, 4vw, 2.5rem);
+            border-radius: 18px;
+            padding: clamp(1.25rem, 4vw, 3.25rem);
             width: 100%;
-            max-width: 900px;
+            max-width: 980px;
             min-width: 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--gold), var(--coral));
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding: 0.75rem 0 1.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header::before {
+            content: "LIVE DEBUGGING GAUNTLET / 04 STAGES";
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
         }
 
         .header h1 {
             color: var(--primary-green);
-            margin: 0 0 0.5rem 0;
-            font-size: clamp(1.6rem, 6vw, 2.5rem);
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            margin: 0 0 0.65rem;
+            max-width: 14ch;
+            font-size: clamp(2.25rem, 7vw, 4.75rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
             overflow-wrap: anywhere;
         }
 
         .header p {
             margin: 0;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
+            color: var(--muted-text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: clamp(0.72rem, 1.5vw, 0.88rem);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+        }
+
+        .stage-progress {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 2rem;
+            padding: 0 0.25rem;
+        }
+
+        .stage-progress::before,
+        .stage-progress::after {
+            content: "";
+            position: absolute;
+            top: 0.65rem;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .stage-progress::after {
+            right: auto;
+            width: 0;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .stage-progress[data-active="1"]::after { width: 25%; }
+        .stage-progress[data-active="2"]::after { width: 50%; }
+        .stage-progress[data-active="3"]::after { width: 75%; }
+
+        .stage-step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted-text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .stage-step::before {
+            content: attr(data-step);
+            display: grid;
+            place-items: center;
+            width: 1.35rem;
+            height: 1.35rem;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            background: var(--container-bg);
+            color: var(--muted-text);
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .stage-step.is-active,
+        .stage-step.is-complete {
+            color: var(--primary-green);
+        }
+
+        .stage-step.is-active::before,
+        .stage-step.is-complete::before {
+            border-color: var(--primary-green);
+            background: var(--primary-green);
+            color: #07131f;
         }
 
         .question-block {
-            background-color: var(--section-bg);
+            position: relative;
+            background: rgba(19, 36, 56, 0.82);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: clamp(1rem, 3vw, 1.5rem);
-            margin-bottom: 2rem;
-            border-left: 4px solid var(--primary-green);
+            border-radius: 12px;
+            padding: clamp(1rem, 3vw, 1.75rem);
+            margin-bottom: 1.25rem;
+            border-left: 3px solid var(--primary-green);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
         }
 
         .question-header {
             color: var(--primary-green);
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0 0 1.25rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.86rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .question-header::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: var(--border-color);
         }
 
         .dynamic-prompt {
-            color: #ff7b72;
-            font-size: 1.05rem;
+            color: #ffd4a8;
+            background: rgba(255, 136, 111, 0.07);
+            border: 1px solid rgba(255, 136, 111, 0.25);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
             margin-bottom: 1.5rem;
+            font-size: 0.96rem;
             line-height: 1.5;
             font-weight: 500;
             overflow-wrap: anywhere;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.15rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #fff;
+            margin-bottom: 0.45rem;
+            color: var(--muted-text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
             font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         input[type="text"],
         select,
         textarea {
             width: 100%;
-            padding: 0.75rem;
-            background-color: var(--bg-color);
+            padding: 0.85rem 0.95rem;
+            background-color: var(--field-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
+            border-radius: 7px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
 
         input[type="text"]:focus,
         select:focus,
         textarea:focus {
             outline: none;
+            background-color: #0d1d30;
             border-color: var(--primary-green);
-            box-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+            box-shadow: 0 0 0 3px rgba(114, 241, 196, 0.12);
+        }
+
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: #567087;
         }
 
         .code-input {
-            font-family: 'Courier New', Courier, monospace;
-            min-height: 150px;
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            min-height: 170px;
             white-space: pre;
             overflow-x: auto;
+            resize: vertical;
         }
 
         .two-col {
             display: flex;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .two-col .form-group {
@@ -144,28 +275,56 @@
 
         button {
             background-color: var(--primary-green);
-            color: var(--bg-color);
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 4px;
+            color: #07131f;
+            border: 1px solid var(--primary-green);
+            padding: 0.95rem 1.4rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border-radius: 7px;
             cursor: pointer;
-            width: 100%;
+            flex: 1;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            transition: background-color 0.2s;
-            margin-top: 1rem;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
         }
 
         button:hover {
-            background-color: #22c55e;
+            background-color: #a4f8dc;
+            box-shadow: 0 8px 20px rgba(114, 241, 196, 0.16);
+            transform: translateY(-1px);
+        }
+
+        button:focus-visible {
+            outline: 3px solid rgba(243, 201, 105, 0.6);
+            outline-offset: 3px;
+        }
+
+        button:disabled,
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.75rem;
+        }
+
+        #submit-button {
+            background: transparent;
+            color: var(--primary-green);
         }
 
         .notice {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #8b949e;
-            margin-top: 1rem;
+            text-align: left;
+            font-size: 0.78rem;
+            color: var(--muted-text);
+            margin: 1rem 0 0;
+            padding-left: 0.2rem;
         }
 
         .tab-blocker {
@@ -176,7 +335,7 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            background: rgba(13, 17, 23, 0.98);
+            background: rgba(6, 15, 27, 0.98);
             text-align: center;
         }
 
@@ -185,14 +344,16 @@
         }
 
         .tab-blocker h2 {
-            color: #ff7b72;
+            color: var(--coral);
             margin: 0 0 0.75rem;
+            font-size: clamp(1.5rem, 5vw, 2.4rem);
         }
 
         .tab-blocker p {
             margin: 0;
             max-width: 32rem;
             line-height: 1.5;
+            color: var(--muted-text);
         }
 
         .level-timer {
@@ -203,17 +364,17 @@
             padding: 0.75rem 1rem;
             background-color: var(--container-bg);
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 8px;
             color: var(--primary-green);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.25rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
             font-weight: bold;
             letter-spacing: 1px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
         }
 
         .level-timer.is-expired {
-            color: #ff7b72;
+            color: var(--coral);
         }
 
         @media (max-width: 600px) {
@@ -222,13 +383,13 @@
             }
 
             .container {
-                border-radius: 6px;
+                border-radius: 12px;
                 padding: 1rem;
             }
 
             .header {
-                margin-bottom: 1.25rem;
-                padding: 3.25rem 0 1rem;
+                margin-bottom: 1.5rem;
+                padding: 2.75rem 0 1.25rem;
             }
 
             .header h1 {
@@ -236,8 +397,17 @@
             }
 
             .header p {
-                font-size: 0.9rem;
+                font-size: 0.7rem;
                 line-height: 1.4;
+            }
+
+            .stage-progress {
+                margin-bottom: 1.5rem;
+            }
+
+            .stage-step {
+                font-size: 0.55rem;
+                letter-spacing: 0.04em;
             }
 
             .two-col {
@@ -251,7 +421,7 @@
             }
 
             .question-header {
-                font-size: 1.2rem;
+                font-size: 0.76rem;
             }
 
             .level-timer {
@@ -264,8 +434,12 @@
             }
 
             button {
-                padding: 0.9rem 1rem;
-                font-size: 1rem;
+                padding: 0.9rem 0.75rem;
+                font-size: 0.7rem;
+            }
+
+            .action-row {
+                flex-direction: column;
             }
         }
 
@@ -294,6 +468,12 @@
         <div class="header">
             <h1>Syntax Syndicate</h1>
             <p>DEBUG. JUSTIFY. CONQUER. | FINAL SUBMISSION</p>
+        </div>
+        <div class="stage-progress" id="stage-progress" data-active="0" aria-label="Submission progress">
+            <div class="stage-step" data-step="1">Beginner</div>
+            <div class="stage-step" data-step="2">Intermediate</div>
+            <div class="stage-step" data-step="3">Hard</div>
+            <div class="stage-step" data-step="4">Extreme</div>
         </div>
         <form id="submission-form" method="POST">
             <div class="two-col">
@@ -412,6 +592,8 @@
         const difficultyValue = document.getElementById("gauntlet-value");
         const tabBlocker = document.getElementById("tab-blocker");
         const timerDisplay = document.getElementById("level-timer");
+        const stageProgress = document.getElementById("stage-progress");
+        const stageSteps = [...stageProgress.querySelectorAll(".stage-step")];
         const levels = ["Beginner", "Intermediate", "Hard", "Extreme"];
         const taskBlocks = [...document.querySelectorAll(".question-block")];
         const levelTimeLimit = 15 * 60;
@@ -427,6 +609,14 @@
             const minutes = Math.floor(secondsRemaining / 60).toString().padStart(2, "0");
             const seconds = (secondsRemaining % 60).toString().padStart(2, "0");
             timerDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function updateStageProgress() {
+            stageProgress.dataset.active = Math.max(0, currentLevelIndex).toString();
+            stageSteps.forEach((step, index) => {
+                step.classList.toggle("is-active", index === currentLevelIndex);
+                step.classList.toggle("is-complete", index < currentLevelIndex);
+            });
         }
 
         function expireCurrentLevel() {
@@ -522,6 +712,7 @@
         function setLevel(level) {
             difficultySelect.value = level;
             difficultyValue.value = level;
+            updateStageProgress();
             document.getElementById("next-stage").disabled = false;
             document.getElementById("submit-button").disabled = false;
 
