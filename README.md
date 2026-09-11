@@ -28,6 +28,10 @@ To connect the project to a different Google Apps Script deployment:
 
 The form submits through a hidden iframe and then redirects to `Submission Completed.html`, so participants see a clear completion message without leaving the challenge workflow.
 
+Each final submission includes a unique `Submission_ID` and `Submitted_At` value. The Apps Script should store `Submission_ID` as a column and use it to detect duplicate deliveries when handling retries or high-concurrency traffic.
+
+The completion page now waits for the hidden iframe response instead of redirecting after a fixed 250 ms delay. The 30-second fallback prevents a participant from being stuck if the endpoint does not return a load event, but it cannot guarantee storage by itself; the Apps Script must still write each POST atomically and handle concurrent requests.
+
 ## Important Behavior
 
 - Refreshing the challenge page blocks the current submission.

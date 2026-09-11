@@ -463,7 +463,7 @@
             <p>A new tab or window was detected. Reopen the website to start a new submission.</p>
         </div>
     </div>
-    <iframe name="submission-frame" title="Submission response" hidden></iframe>
+    <iframe name="submission-frame" id="submission-frame" title="Submission response" hidden></iframe>
     <div class="container">
         <div class="header">
             <h1>Syntax Syndicate</h1>
@@ -586,6 +586,7 @@
         // Paste the deployed Google Apps Script web app URL here.
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_tqHES0tQbKMrmyEmmM4WKECkw18VXn9eekeyEoHN6KFDVLobEBG-7cIGgE7y-Ajg/exec";
         const submissionForm = document.getElementById("submission-form");
+        const submissionFrame = document.getElementById("submission-frame");
         const languageSelect = document.getElementById("language");
         const languageValue = document.getElementById("language-value");
         const difficultySelect = document.getElementById("gauntlet");
@@ -604,6 +605,8 @@
         let levelTimedOut = false;
         let timerInterval = null;
         let timerEndTime = 0;
+        let submissionInProgress = false;
+        let contestStartTime = 0;
 
         function updateTimerDisplay(secondsRemaining) {
             const minutes = Math.floor(secondsRemaining / 60).toString().padStart(2, "0");
@@ -656,6 +659,24 @@
             field.name = name;
             field.value = value;
             submissionForm.appendChild(field);
+        }
+
+        function getTimeTaken() {
+            const elapsedSeconds = Math.max(0, Math.floor((Date.now() - contestStartTime) / 1000));
+            const hours = Math.floor(elapsedSeconds / 3600).toString().padStart(2, "0");
+            const minutes = Math.floor((elapsedSeconds % 3600) / 60).toString().padStart(2, "0");
+            const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function setSubmissionMetadata() {
+            appendHiddenField("Submission_ID", crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+            appendHiddenField("Submitted_At", new Date().toISOString());
+            appendHiddenField("Time Taken", getTimeTaken());
+        }
+
+        function redirectAfterSubmission() {
+            window.location.href = "Submission Completed.html";
         }
 
         function disableFormControls() {
@@ -757,6 +778,7 @@
 
         function startSubmission() {
             currentLevelIndex = 0;
+            contestStartTime = Date.now();
             languageValue.value = languageSelect.value;
             setLevel(levels[currentLevelIndex]);
         }
@@ -799,6 +821,7 @@
             appendHiddenField("Anti_Cheat_Status", "Cheat detected");
             appendHiddenField("Anti_Cheat_Event", reason);
             appendHiddenField("Anti_Cheat_Time", new Date().toISOString());
+            appendHiddenField("Time Taken", getTimeTaken());
             submissionForm.action = GOOGLE_APPS_SCRIPT_URL;
             submissionForm.target = "submission-frame";
             submissionForm.submit();
@@ -826,9 +849,11 @@
         submissionForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            if (submissionBlocked || levelTimedOut || currentLevelIndex !== levels.length - 1 || !currentAnswersAreComplete()) {
+            if (submissionInProgress || submissionBlocked || levelTimedOut || currentLevelIndex !== levels.length - 1 || !currentAnswersAreComplete()) {
                 alert(
-                    submissionBlocked || levelTimedOut
+                    submissionInProgress
+                        ? "Your submission is already being sent. Please wait."
+                        : submissionBlocked || levelTimedOut
                         ? "Submission blocked. Reopen the website before submitting again."
                         : "Complete every task in every difficulty level before submitting."
                 );
@@ -841,15 +866,21 @@
             }
 
             const submitButton = document.getElementById("submit-button");
+            submissionInProgress = true;
             submitButton.disabled = true;
             submitButton.textContent = "Submitting...";
+            setSubmissionMetadata();
 
             submissionForm.action = GOOGLE_APPS_SCRIPT_URL;
             submissionForm.target = "submission-frame";
             submissionForm.submit();
-            setTimeout(() => {
-                window.location.href = "Submission Completed.html";
-            }, 250);
+            window.setTimeout(redirectAfterSubmission, 30000);
+        });
+
+        submissionFrame.addEventListener("load", () => {
+            if (submissionInProgress) {
+                redirectAfterSubmission();
+            }
         });
 
         document.getElementById("next-stage").addEventListener("click", () => {
